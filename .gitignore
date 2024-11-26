@@ -3,3 +3,6 @@ venv
 .vscode
 .env
 __pycache__
+*.spec
+dist
+build
