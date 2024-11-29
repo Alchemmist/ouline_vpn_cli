@@ -1,5 +1,39 @@
 from config import client
 from utils import gb_to_bytes
+from openpyxl import Workbook
+
+
+def dump_keys_to_excel(keys, filename="keys_dump.xlsx"):
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Keys"
+
+    headers = [
+        "ID",
+        "Name",
+        "Password",
+        "Port",
+        "Method",
+        "Access URL",
+        "Used Bytes",
+        "Data Limit",
+    ]
+    sheet.append(headers)
+
+    for key in keys:
+        sheet.append([
+            key.key_id,
+            key.name,
+            key.password,
+            key.port,
+            key.method,
+            key.access_url,
+            key.used_bytes,
+            key.data_limit,
+        ])
+
+    workbook.save(filename)
+    print(f"Данные о ключах успешно сохранены в файл: {filename}")
 
 
 def get_keys():

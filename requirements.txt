@@ -1,3 +1,5 @@
 outline-vpn-api
 python-decouple
 pyinstaller
+openpyxl
+requests

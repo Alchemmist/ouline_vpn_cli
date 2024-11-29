@@ -2,6 +2,7 @@ import argparse
 from api import (
     delete_data_limit,
     delete_key,
+    dump_keys_to_excel,
     get_keys,
     get_key_info,
     get_server_info,
@@ -21,7 +22,11 @@ def create_parser():
     )
 
     # Команда для получения всех ключей
-    subparsers.add_parser("get_keys", help="Получить информацию обо всех ключах")
+    parser_get_keys = subparsers.add_parser("get_keys", help="Получить информацию обо всех ключах")
+    parser_get_keys.add_argument(
+    "--excel-dump", action="store_true", help="Сохранить ключи в файл Excel"
+)
+
 
     # Команда для получения информации о ключе
     get_key_parser = subparsers.add_parser(
@@ -74,18 +79,25 @@ def process_args(args):
     try:
         if args.command == "get_keys":
             keys = get_keys()
-            if keys:
-                print("Список всех ключей:\n")
-                for key in keys:
-                    print(f"ID: {key.key_id}")
-                    print(f"Имя: {key.name or 'Без имени'}")
-                    print(f"Пароль: {key.password}")
-                    print(f"Порт: {key.port}")
-                    print(f"Метод шифрования: {key.method}")
-                    print(f"URL доступа: {key.access_url}")
-                    print(f"Использованные байты: {key.used_bytes or 'Нет данных'}")
-                    print(f"Лимит данных: {key.data_limit or 'Не установлен'}")
-                    print("-" * 40)
+            if not keys:
+                print("Ключи не найдены.")
+                return 
+
+            if args.excel_dump:
+                dump_keys_to_excel(keys, "keys_dump.xlsx")
+                return
+
+            print("Список всех ключей:\n")
+            for key in keys:
+                print(f"ID: {key.key_id}")
+                print(f"Имя: {key.name or 'Без имени'}")
+                print(f"Пароль: {key.password}")
+                print(f"Порт: {key.port}")
+                print(f"Метод шифрования: {key.method}")
+                print(f"URL доступа: {key.access_url}")
+                print(f"Использованные байты: {key.used_bytes or 'Нет данных'}")
+                print(f"Лимит данных: {key.data_limit or 'Не установлен'}")
+                print("-" * 40)
             else:
                 print("Ключи не найдены.")
         
